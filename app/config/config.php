@@ -4,21 +4,26 @@
  * NOTE: please remove this comment.
  */
  
- use Phalcon\Db\Adapter\Pdo\Postgresql;
+//  use Phalcon\Db\Adapter\Pdo\Postgresql;
+use Phalcon\Db\Adapter\Pdo\Mysql as PdoMysql;
  
 defined('BASE_PATH') || define('BASE_PATH', getenv('BASE_PATH') ?: realpath(dirname(__FILE__) . '/../..'));
 defined('APP_PATH') || define('APP_PATH', BASE_PATH . '/app');
 
 return new \Phalcon\Config([
     'database' => [
-//        'adapter'     => 'Mysql',
-				'adapter'     => 'Postgresql',
-		        'host'        => 'ec2-54-243-210-70.compute-1.amazonaws.com',
-				'username'    => 'pfccnclzowrzyb',
-				'password'    => 'f08d84a2e8a83636a9ab9bcfe80ae7447696fe6903e90792231d7112606b7fd9',
-				'dbname'      => 'd8skbinfa43v3m',
-				'port'        => '5432',
-                'schema'      => 'public'   
+                'adapter'     => 'Mysql',
+                'host'     => 'localhost',
+               'username' => 'root',
+               'password' => '',
+               'dbname'   => 'test',
+				// 'adapter'     => 'Postgresql',
+		        // 'host'        => 'ec2-54-243-210-70.compute-1.amazonaws.com',
+				// 'username'    => 'pfccnclzowrzyb',
+				// 'password'    => 'f08d84a2e8a83636a9ab9bcfe80ae7447696fe6903e90792231d7112606b7fd9',
+				// 'dbname'      => 'd8skbinfa43v3m',
+				// 'port'        => '5432',
+                // 'schema'      => 'public'   
     ],
     'application' => [
         'appDir'         => APP_PATH . '/',

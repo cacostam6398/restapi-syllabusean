@@ -39,19 +39,19 @@ $di->set(
     'db',
     function () {
  //       return new PdoMysql(
-		  return new Postgresql(
+		  return new PdoMysql(
             [ 
- //               'host'     => 'localhost',
- //               'username' => 'root',
- //               'password' => '',
- //               'dbname'   => 'test',
-				'adapter'     => 'Postgresql',
-		        'host'        => 'ec2-54-243-210-70.compute-1.amazonaws.com',
-				'username'    => 'pfccnclzowrzyb',
-				'password'    => 'f08d84a2e8a83636a9ab9bcfe80ae7447696fe6903e90792231d7112606b7fd9',
-				'dbname'      => 'd8skbinfa43v3m',
-				'port'        => '5432',
-				'schema'      => 'public'
+               'host'     => 'localhost',
+               'username' => 'root',
+               'password' => '',
+               'dbname'   => 'test'
+				// 'adapter'     => 'Postgresql',
+		        // 'host'        => 'ec2-54-243-210-70.compute-1.amazonaws.com',
+				// 'username'    => 'pfccnclzowrzyb',
+				// 'password'    => 'f08d84a2e8a83636a9ab9bcfe80ae7447696fe6903e90792231d7112606b7fd9',
+				// 'dbname'      => 'd8skbinfa43v3m',
+				// 'port'        => '5432',
+				// 'schema'      => 'public'
             ]
         );
     }
