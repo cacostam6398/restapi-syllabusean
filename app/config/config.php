@@ -13,10 +13,10 @@ defined('APP_PATH') || define('APP_PATH', BASE_PATH . '/app');
 return new \Phalcon\Config([
     'database' => [
                 'adapter'     => 'Mysql',
-                'host'     => 'localhost',
-               'username' => 'root',
-               'password' => '',
-               'dbname'   => 'test',
+                'host'        => 'localhost',
+                'username'    => 'root',
+                'password'    => '',
+                'dbname'      => 'syllabus_ean',
 				// 'adapter'     => 'Postgresql',
 		        // 'host'        => 'ec2-54-243-210-70.compute-1.amazonaws.com',
 				// 'username'    => 'pfccnclzowrzyb',

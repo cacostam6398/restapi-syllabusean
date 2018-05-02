@@ -25,7 +25,7 @@ try {
 	
 	$loader->registerNamespaces(
 		[
-			'machine\robot' => __DIR__ . '/models/',
+			'syl\usuario' => __DIR__ . '/models/',
 		]
 	);
 	
@@ -44,7 +44,7 @@ $di->set(
                'host'     => 'localhost',
                'username' => 'root',
                'password' => '',
-               'dbname'   => 'test'
+               'dbname'   => 'syllabus_ean'
 				// 'adapter'     => 'Postgresql',
 		        // 'host'        => 'ec2-54-243-210-70.compute-1.amazonaws.com',
 				// 'username'    => 'pfccnclzowrzyb',
@@ -88,20 +88,20 @@ $di->set(
 
     //echo str_replace(["\n","\r","\t"], '', $application->handle()->getContent());
 	
-	// Retrieves all robots
+// Recuperar todos los usuarios
 $app->get(
-    '/api/robots',
+    '/api/usuarios',
     function () use ($app) {
-        $phql = 'SELECT * FROM machine\robot\Robots ORDER BY name';
+        $phql = 'SELECT * FROM syl\usuario\Usuario ORDER BY nombre';
 
-        $robots = $app->modelsManager->executeQuery($phql);
+        $usuarios = $app->modelsManager->executeQuery($phql);
 
         $data = [];
 
-        foreach ($robots as $robot) {
+        foreach ($usuarios as $usuario) {
             $data[] = [
-                'id_robot'   => $robot->id_robot,
-                'name' => $robot->name,
+                'id_usuario'   => $usuario->id_usuario,
+                'nombre'       => $usuario->nombre,
             ];
         }
 
@@ -229,13 +229,13 @@ $app->post(
     }
 );
 
-// Updates robots based on primary key
+// Actualizar robots basados en la clave primaria
 $app->put(
-   '/api/robots/{id:[0-9]+}',
+    '/api/robots/{id:[0-9]+}',
     function ($id) use ($app) {
         $robot = $app->request->getJsonRawBody();
 
-        $phql = 'UPDATE machine\robot\Robots SET name = :name:, type = :type:, year = :year: WHERE id = :id:';
+        $phql = 'UPDATE Store\Toys\Robots SET name = :name:, type = :type:, year = :year: WHERE id = :id:';
 
         $status = $app->modelsManager->executeQuery(
             $phql,
@@ -247,10 +247,10 @@ $app->put(
             ]
         );
 
-        // Create a response
+        // Crear una respuesta
         $response = new Response();
 
-        // Check if the insertion was successful
+        // Comprobar si la inserción fue exitosa
         if ($status->success() === true) {
             $response->setJsonContent(
                 [
@@ -258,8 +258,8 @@ $app->put(
                 ]
             );
         } else {
-            // Change the HTTP status
-            $response->setStatusCode(409, 'Conflict');
+            // Cambiar el status de HTTP
+            $response->setStatusCode(409, 'Conflicto');
 
             $errors = [];
 
@@ -278,8 +278,8 @@ $app->put(
         return $response;
     }
 );
-
-// Deletes robots based on primary key
+    
+// Borrando robots basados en la clave primaria
 $app->delete(
     '/api/robots/{id:[0-9]+}',
     function ($id) use ($app) {
@@ -322,6 +322,60 @@ $app->delete(
         return $response;
     }
 );
+    
+// Servicio de autentificar
+$app->post(
+    '/api/usuarios',
+    function () use ($app) {
+        
+        $usuario = $app->request->getJsonRawBody();
+//        $correo = 'criosmon2345@universidadean.edu.co';
+        
+        $phql = 'SELECT * FROM syl\usuario\Usuario WHERE correo = :correo: ';
+        
+        $status = $app->modelsManager->executeQuery(
+            $phql,
+            [
+                'correo' => $usuario->correo,
+            ]
+        );         
+        
+        // Crear una respuesta
+        $response = new Response();
+        $usuario = $status->getFirst();
+        // Comprobar si la comprobacion del usuario es exitosa
+        if ($usuario != false) {
+            
+            $response->setStatusCode(201, 'Created');
+
+            $response->setJsonContent(
+                [
+                    'status' => 'OK',
+                    'data'   => $usuario,
+                ]
+            );        
+            
+        } else {
+            // Cambiar el HTTP status
+            $response->setStatusCode(409, 'Conflict');
+
+            $errors = [];
+
+            foreach ($status->getMessages() as $message) {
+                $errors[] = $message->getMessage();
+            }
+
+            $response->setJsonContent(
+                [
+                    'status'   => 'ERROR',
+                    'messages' => $errors,
+                ]
+            );
+        }
+
+        return $response;
+    }
+);    
 
 $app->handle();
 	
