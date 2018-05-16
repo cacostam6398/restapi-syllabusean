@@ -1,13 +1,8 @@
 <?php
 
-namespace syl\rol;
+namespace syl\ean;
 
-use Phalcon\Mvc\Model;
-use Phalcon\Mvc\Model\Message;
-use Phalcon\Mvc\Model\Validator\Uniqueness;
-use Phalcon\Mvc\Model\Validator\InclusionIn;
-
-class Rol extends Model
+class Rol extends \Phalcon\Mvc\Model
 {
 
     /**
@@ -22,7 +17,7 @@ class Rol extends Model
     /**
      *
      * @var string
-     * @Column(column="nombre", type="string", length=30, nullable=false)
+     * @Column(column="nombre", type="string", length=50, nullable=false)
      */
     protected $nombre;
 
@@ -79,7 +74,7 @@ class Rol extends Model
     {
         $this->setSchema("syllabus_ean");
         $this->setSource("rol");
-        $this->hasMany('id_rol', 'syl\rol\Usuario', 'id_rol', ['alias' => 'Usuario']);
+        $this->hasMany('id_rol', 'syl\ean\Usuario', 'id_rol', ['alias' => 'Usuario']);
     }
 
     /**
@@ -127,50 +122,5 @@ class Rol extends Model
             'nombre' => 'nombre'
         ];
     }
-    
- ///  Añadir validación
-    
-    
-    	 public function validation()
-    {
-        // Type must be: droid, mechanical or virtual
-//        $this->validate(
-//            new InclusionIn(
-//                [
-//                    'field'  => 'type',
-//                    'domain' => [
-//                        'droid',
-//                        'mechanical',
-//                        'virtual',
-//                    ],
-//                ]
-//            )
-//        );
-
-        // Robot name must be unique
-//        $this->validate(
-//            new Uniqueness(
-//                [
-//                    'field'   => 'name',
-//                    'message' => 'The robot name must be unique',
-//                ]
-//            )
-//        );
-
-        // Year cannot be less than zero
-        if ($this->year < 0) {
-            $this->appendMessage(
-                new Message('The year cannot be less than zero')
-            );
-        }
-
-        // Check if any messages have been produced
-        if ($this->validationHasFailed() === true) {
-            return false;
-        }
-    }
-    
-    
-    
 
 }

@@ -9,11 +9,10 @@ use Phalcon\Http\Response;
 
 
 error_reporting(E_ALL);
-/**
+
 define('BASE_PATH', dirname(__DIR__));
 define('APP_PATH', BASE_PATH . '/app');
- */
- 
+
 try {
 
     /**
@@ -25,9 +24,16 @@ try {
 	
 	$loader->registerNamespaces(
 		[
-			'syl\usuario' => __DIR__ . '/models/',
+            'syl\ean' => APP_PATH . '/models/',
 		]
-	);
+    );
+    
+    $loader->registerDirs(
+        [
+            APP_PATH . '/controllers/',
+            APP_PATH . '/models/',
+        ]
+    );
 	
 	
 	$loader->register();
@@ -57,15 +63,13 @@ $di->set(
     }
 );
 	
-	
-	
 	$app = new Micro($di);
 
-    /**
-     * Handle routes
+    //
+    // * Configurar rutas
      
     include APP_PATH . '/config/router.php';
-	*/
+	
     /**
      * Read services
      
@@ -323,62 +327,7 @@ $app->delete(
     }
 );
     
-// Servicio de autentificar
-$app->post(
-    '/api/usuarios',
-    function () use ($app) {
-        
-        $usuario = $app->request->getJsonRawBody();
-//        $correo = 'criosmon2345@universidadean.edu.co';
-        
-        $phql = 'SELECT * FROM syl\usuario\Usuario WHERE correo = :correo: ';
-        
-        $status = $app->modelsManager->executeQuery(
-            $phql,
-            [
-                'correo' => $usuario->correo,
-            ]
-        );         
-        
-        // Crear una respuesta
-        $response = new Response();
-        $usuario = $status->getFirst();
-        // Comprobar si la comprobacion del usuario es exitosa
-        if ($usuario != false) {
-            
-            $response->setStatusCode(201, 'Created');
-
-            $response->setJsonContent(
-                [
-                    'status' => 'OK',
-                    'data'   => $usuario,
-                ]
-            );        
-            
-        } else {
-            // Cambiar el HTTP status
-            $response->setStatusCode(409, 'Conflict');
-
-            $errors = [];
-
-            foreach ($status->getMessages() as $message) {
-                $errors[] = $message->getMessage();
-            }
-
-            $response->setJsonContent(
-                [
-                    'status'   => 'ERROR',
-                    'messages' => $errors,
-                ]
-            );
-        }
-
-        return $response;
-    }
-);    
-
 $app->handle();
-	
 	
 
 } catch (\Exception $e) {

@@ -1,13 +1,8 @@
 <?php
 
-namespace syl\usuario;
+namespace syl\ean;
 
-use Phalcon\Mvc\Model;
-use Phalcon\Mvc\Model\Message;
-use Phalcon\Mvc\Model\Validator\Uniqueness;
-use Phalcon\Mvc\Model\Validator\InclusionIn;
-
-class Usuario extends Model
+class Usuario extends \Phalcon\Mvc\Model
 {
 
     /**
@@ -21,20 +16,6 @@ class Usuario extends Model
 
     /**
      *
-     * @var string
-     * @Column(column="nombre", type="string", length=40, nullable=false)
-     */
-    protected $nombre;
-
-    /**
-     *
-     * @var string
-     * @Column(column="apellido", type="string", length=40, nullable=false)
-     */
-    protected $apellido;
-
-    /**
-     *
      * @var integer
      * @Column(column="id_rol", type="integer", length=11, nullable=false)
      */
@@ -43,37 +24,44 @@ class Usuario extends Model
     /**
      *
      * @var string
-     * @Column(column="correo", type="string", length=50, nullable=false)
+     * @Column(column="nombre", type="string", length=80, nullable=false)
+     */
+    protected $nombre;
+
+    /**
+     *
+     * @var string
+     * @Column(column="apellido", type="string", length=80, nullable=false)
+     */
+    protected $apellido;
+
+    /**
+     *
+     * @var string
+     * @Column(column="correo", type="string", length=100, nullable=false)
      */
     protected $correo;
 
     /**
      *
      * @var string
-     * @Column(column="telefono", type="string", length=10, nullable=false)
+     * @Column(column="telefono", type="string", length=15, nullable=true)
      */
     protected $telefono;
 
     /**
      *
      * @var string
-     * @Column(column="celular", type="string", length=10, nullable=false)
+     * @Column(column="celular", type="string", length=15, nullable=true)
      */
     protected $celular;
 
     /**
      *
      * @var string
-     * @Column(column="cedula", type="string", length=12, nullable=false)
+     * @Column(column="cedula", type="string", length=15, nullable=true)
      */
     protected $cedula;
-
-    /**
-     *
-     * @var string
-     * @Column(column="contrasenia", type="string", length=50, nullable=false)
-     */
-    protected $contrasenia;
 
     /**
      * Method to set the value of field id_usuario
@@ -84,6 +72,19 @@ class Usuario extends Model
     public function setIdUsuario($id_usuario)
     {
         $this->id_usuario = $id_usuario;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field id_rol
+     *
+     * @param integer $id_rol
+     * @return $this
+     */
+    public function setIdRol($id_rol)
+    {
+        $this->id_rol = $id_rol;
 
         return $this;
     }
@@ -110,19 +111,6 @@ class Usuario extends Model
     public function setApellido($apellido)
     {
         $this->apellido = $apellido;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field id_rol
-     *
-     * @param integer $id_rol
-     * @return $this
-     */
-    public function setIdRol($id_rol)
-    {
-        $this->id_rol = $id_rol;
 
         return $this;
     }
@@ -180,19 +168,6 @@ class Usuario extends Model
     }
 
     /**
-     * Method to set the value of field contrasenia
-     *
-     * @param string $contrasenia
-     * @return $this
-     */
-    public function setContrasenia($contrasenia)
-    {
-        $this->contrasenia = $contrasenia;
-
-        return $this;
-    }
-
-    /**
      * Returns the value of field id_usuario
      *
      * @return integer
@@ -200,6 +175,16 @@ class Usuario extends Model
     public function getIdUsuario()
     {
         return $this->id_usuario;
+    }
+
+    /**
+     * Returns the value of field id_rol
+     *
+     * @return integer
+     */
+    public function getIdRol()
+    {
+        return $this->id_rol;
     }
 
     /**
@@ -220,16 +205,6 @@ class Usuario extends Model
     public function getApellido()
     {
         return $this->apellido;
-    }
-
-    /**
-     * Returns the value of field id_rol
-     *
-     * @return integer
-     */
-    public function getIdRol()
-    {
-        return $this->id_rol;
     }
 
     /**
@@ -273,23 +248,18 @@ class Usuario extends Model
     }
 
     /**
-     * Returns the value of field contrasenia
-     *
-     * @return string
-     */
-    public function getContrasenia()
-    {
-        return $this->contrasenia;
-    }
-
-    /**
      * Initialize method for model.
      */
     public function initialize()
     {
         $this->setSchema("syllabus_ean");
         $this->setSource("usuario");
-        $this->belongsTo('id_rol', 'syl\usuario\Rol', 'id_rol', ['alias' => 'Rol']);
+        $this->hasMany('id_usuario', 'syl\ean\DetalleVersion', 'id_usuario', ['alias' => 'DetalleVersion']);
+        $this->hasMany('id_usuario', 'syl\ean\Syllabus', 'aprobo', ['alias' => 'Syllabus']);
+        $this->hasMany('id_usuario', 'syl\ean\Syllabus', 'reviso', ['alias' => 'Syllabus']);
+        $this->hasMany('id_usuario', 'syl\ean\Syllabus', 'id_usuario', ['alias' => 'Syllabus']);
+        $this->hasMany('id_usuario', 'syl\ean\UsuarioPrograma', 'id_usuario', ['alias' => 'UsuarioPrograma']);
+        $this->belongsTo('id_rol', 'syl\ean\Rol', 'id_rol', ['alias' => 'Rol']);
     }
 
     /**
@@ -334,54 +304,14 @@ class Usuario extends Model
     {
         return [
             'id_usuario' => 'id_usuario',
+            'id_rol' => 'id_rol',
             'nombre' => 'nombre',
             'apellido' => 'apellido',
-            'id_rol' => 'id_rol',
             'correo' => 'correo',
             'telefono' => 'telefono',
             'celular' => 'celular',
-            'cedula' => 'cedula',
-            'contrasenia' => 'contrasenia'
+            'cedula' => 'cedula'
         ];
-    }
-
-    public function validation()
-    {
-        // El tipo debe ser: droid, mechanical o virtual
-//        $this->validate(
-//            new InclusionIn(
-//                [
-//                    'field'  => 'nombre',
-//                    'domain' => [
-//                        'droid',
-//                        'mechanical',
-//                        'virtual',
-//                    ],
-//                ]
-//            )
-//        );
-
-        // El nombre del Robot debe ser único
-        $this->validate(
-            new Uniqueness(
-                [
-                    'field'   => 'correo',
-                    'message' => 'El nombre del Robot debe ser único',
-                ]
-            )
-        );
-
-        // El año no debe ser menor a cero
-//        if ($this->year < 0) {
-//            $this->appendMessage(
-//                new Message('El año no debe ser menor a cero')
-//            );
-//        }
-
-        // Comprobar si se han producido mensajes
-        if ($this->validationHasFailed() === true) {
-            return false;
-        }
     }
 
 }
