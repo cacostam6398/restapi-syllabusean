@@ -4,8 +4,11 @@ use Phalcon\Loader;
 use Phalcon\Mvc\Micro;
 use Phalcon\Di\FactoryDefault;
 use Phalcon\Db\Adapter\Pdo\Mysql as PdoMysql;
+use Phalcon\Session\Adapter\Files as Session;
 use Phalcon\Db\Adapter\Pdo\Postgresql;
 use Phalcon\Http\Response;
+use Phalcon\Events\Event;
+use Phalcon\Events\Manager as EventsManager;
 
 
 error_reporting(E_ALL);
@@ -15,10 +18,6 @@ define('APP_PATH', BASE_PATH . '/app');
 
 try {
 
-    /**
-     * The FactoryDefault Dependency Injector automatically registers
-     * the services that provide a full stack framework.
-     */
 	 // Use Loader() to autoload our model
 	$loader = new Loader();
 	
@@ -35,46 +34,69 @@ try {
         ]
     );
 	
-	
 	$loader->register();
 	 
     $di = new FactoryDefault();
+      
+    // * Read services    
+    include APP_PATH . '/config/services.php';
+	//*/
 	
 	// Set up the database service
-$di->set(
-    'db',
-    function () {
- //       return new PdoMysql(
-		  return new PdoMysql(
-            [ 
-               'host'     => 'localhost',
-               'username' => 'root',
-               'password' => '',
-               'dbname'   => 'syllabus_ean'
-				// 'adapter'     => 'Postgresql',
-		        // 'host'        => 'ec2-54-243-210-70.compute-1.amazonaws.com',
-				// 'username'    => 'pfccnclzowrzyb',
-				// 'password'    => 'f08d84a2e8a83636a9ab9bcfe80ae7447696fe6903e90792231d7112606b7fd9',
-				// 'dbname'      => 'd8skbinfa43v3m',
-				// 'port'        => '5432',
-				// 'schema'      => 'public'
-            ]
-        );
-    }
-);
+// $di->set(
+//     'db',
+//     function () {
+//  //       return new PdoMysql(
+// 		  return new PdoMysql(
+//             [ 
+//                'host'     => 'localhost',
+//                'username' => 'root',
+//                'password' => '',
+//                'dbname'   => 'syllabus_ean'
+// 				// 'adapter'     => 'Postgresql',
+// 		        // 'host'        => 'ec2-54-243-210-70.compute-1.amazonaws.com',
+// 				// 'username'    => 'pfccnclzowrzyb',
+// 				// 'password'    => 'f08d84a2e8a83636a9ab9bcfe80ae7447696fe6903e90792231d7112606b7fd9',
+// 				// 'dbname'      => 'd8skbinfa43v3m',
+// 				// 'port'        => '5432',
+// 				// 'schema'      => 'public'
+//             ]
+//         );
+//     }
+// );
 	
-	$app = new Micro($di);
+    $app = new Micro($di);
+    
+// Crear un gestor de eventos
+    // $eventsManager = new EventsManager();
 
-    //
+    // $eventsManager->attach(
+    //     'micro:beforeExecuteRoute',
+    //     function (Event $event, $app) {
+    //         if ($app->session->get('auth') === false) {
+    //             $app->flashSession->error("El usuario no esta autorizado");
+    //             $response = new Response();
+    //             // $app->response->redirect('/');
+    //             // $app->response->sendHeaders();
+    //             $response->setJsonContent(
+    //                 [
+    //                     'status'   => 'ERROR',
+    //                     'messages' => 'El usuario no esta autorizado',
+    //                 ]
+    //             );
+    //             // Devolver (false) y detener la operación
+    //             // return false;
+    //         }
+    //     }
+    // );
+
+    // // Enlazar el gestor de eventos a la aplicación
+    // $app->setEventsManager($eventsManager);    
+
     // * Configurar rutas
      
     include APP_PATH . '/config/router.php';
 	
-    /**
-     * Read services
-     
-    include APP_PATH . '/config/services.php';
-	*/
     /**
      * Get config service for use in inline setup below
      

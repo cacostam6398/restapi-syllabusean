@@ -40,8 +40,11 @@ class IndexController extends ControllerBase
                         [
                             'status' => 'OK',
                             'data'   => $usuario,
+                            'token'  => $this->security->getTokenKey(),
                         ]
-                    );        
+                    );
+                    
+                    $this->session->set('usuario', $usuario);
                     
                 } else {
                     // Cambiar el HTTP status
@@ -59,27 +62,12 @@ class IndexController extends ControllerBase
                             'messages' => $errors,
                         ]
                     );
+
+                    $this->session->set('auth', false);
                 }
         
                 return $response;
-    }
-    
-    public function obt_materias() {
-
-        $phql = 'SELECT id_usuario, a.nombre, apellido, correo , b.nombre nombre_rol
-                         FROM syl\ean\Usuario as a
-                         INNER JOIN syl\ean\Rol as b
-                         ON a.id_rol = b.id_rol
-                         WHERE a.correo = :correo: ';
-
-        $status = $this->modelsManager->executeQuery(
-            $phql,
-            [
-                'correo' => $usuario->correo,
-            ]
-        );                   
-
-    }   
+    }                 
 
 }
 
