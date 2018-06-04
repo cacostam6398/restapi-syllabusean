@@ -4,7 +4,7 @@ use Phalcon\Mvc\Controller;
 
 class ControllerBase extends Controller
 {
-    public function validar_logueo($token) {
+    public function validar_logueo($token = null) {
 
         $respuesta = false;
 

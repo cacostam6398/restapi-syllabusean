@@ -233,71 +233,27 @@ $app->post(
 );
 
 // Actualizar robots basados en la clave primaria
-$app->put(
-    '/api/robots/{id:[0-9]+}',
-    function ($id) use ($app) {
-        $robot = $app->request->getJsonRawBody();
-
-        $phql = 'UPDATE Store\Toys\Robots SET name = :name:, type = :type:, year = :year: WHERE id = :id:';
-
-        $status = $app->modelsManager->executeQuery(
-            $phql,
-            [
-                'id'   => $id,
-                'name' => $robot->name,
-                'type' => $robot->type,
-                'year' => $robot->year,
-            ]
-        );
-
-        // Crear una respuesta
-        $response = new Response();
-
-        // Comprobar si la inserción fue exitosa
-        if ($status->success() === true) {
-            $response->setJsonContent(
-                [
-                    'status' => 'OK'
-                ]
-            );
-        } else {
-            // Cambiar el status de HTTP
-            $response->setStatusCode(409, 'Conflicto');
-
-            $errors = [];
-
-            foreach ($status->getMessages() as $message) {
-                $errors[] = $message->getMessage();
-            }
-
-            $response->setJsonContent(
-                [
-                    'status'   => 'ERROR',
-                    'messages' => $errors,
-                ]
-            );
-        }
-
-        return $response;
-    }
-);
-    
-// Borrando robots basados en la clave primaria
-// $app->delete(
+// $app->put(
 //     '/api/robots/{id:[0-9]+}',
 //     function ($id) use ($app) {
-//         $phql = 'DELETE FROM machine\robot\Robots WHERE id = :id:';
+//         $robot = $app->request->getJsonRawBody();
+
+//         $phql = 'UPDATE Store\Toys\Robots SET name = :name:, type = :type:, year = :year: WHERE id = :id:';
 
 //         $status = $app->modelsManager->executeQuery(
 //             $phql,
 //             [
-//                 'id' => $id,
+//                 'id'   => $id,
+//                 'name' => $robot->name,
+//                 'type' => $robot->type,
+//                 'year' => $robot->year,
 //             ]
 //         );
 
-//         // Create a response
+//         // Crear una respuesta
 //         $response = new Response();
 
+//         // Comprobar si la inserción fue exitosa
 //         if ($status->success() === true) {
 //             $response->setJsonContent(
 //                 [
@@ -305,8 +261,8 @@ $app->put(
 //                 ]
 //             );
 //         } else {
-//             // Change the HTTP status
-//             $response->setStatusCode(409, 'Conflict');
+//             // Cambiar el status de HTTP
+//             $response->setStatusCode(409, 'Conflicto');
 
 //             $errors = [];
 

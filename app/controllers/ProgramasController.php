@@ -34,7 +34,7 @@ class ProgramasController extends ControllerBase
         $programas = syl\ean\UsuarioPrograma::find($usuario->id_usuario);
 
         foreach($programas as $programa){
-            unset($materias,$det_prg);
+            unset($materias,$det_prg);//Limpiar variables
 
             $det_prg = syl\ean\Programa::findFirst($programa->id_programa);
             //Traer toda la union entre el programa y sus materias
@@ -59,7 +59,6 @@ class ProgramasController extends ControllerBase
         }else {
             // Cambiar el HTTP status
             $response->setStatusCode(409, 'Conflict');
-
             $response->setJsonContent(
                 [
                     'status'   => 'ERROR',

@@ -33,6 +33,8 @@ $Syllabus = new MicroCollection();
 $Syllabus->setHandler('SyllabusController', true);
 $Syllabus->setPrefix('/syllabus');
 $Syllabus->post('/crearsyl', 'crear_syllabus');
+$Syllabus->post('/creardet', 'crear_detalle');
+$Syllabus->post('/obtcompt', 'obtener_competenciast');
 // $products->get('/get/{id}', 'get');
 // $products->get('/add/{payload}', 'add');
 $app->mount($Syllabus);
