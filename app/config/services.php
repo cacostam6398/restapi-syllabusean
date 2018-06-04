@@ -39,6 +39,7 @@ $di->setShared('config', function () {
                     'username' => $config->database->username,
                     'password' => $config->database->password,
                     'dbname'   => $config->database->dbname,
+                    'charset'  => 'utf8'
                     // 'adapter'     => 'Postgresql',
                     // 'host'        => 'ec2-54-243-210-70.compute-1.amazonaws.com',
                     // 'username'    => 'pfccnclzowrzyb',

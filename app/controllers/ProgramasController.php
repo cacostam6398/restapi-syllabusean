@@ -34,17 +34,26 @@ class ProgramasController extends ControllerBase
         $programas = syl\ean\UsuarioPrograma::find($usuario->id_usuario);
 
         foreach($programas as $programa){
-            $materia = syl\ean\Materia::find(syl\ean\MateriaPrograma::find($programa)->id_materia);
-            // if (!isset($materias[$materia])){
-            $materias[] = $materia;
-            // }
+            unset($materias,$det_prg);
+
+            $det_prg = syl\ean\Programa::findFirst($programa->id_programa);
+            //Traer toda la union entre el programa y sus materias
+            $rec_mat_prg = syl\ean\MateriaPrograma::find($programa->id_programa);
+            //Buscar todas las materias asociadas al programa
+            foreach($rec_mat_prg as $mat){
+                $materias[]  = syl\ean\Materia::findFirst($mat->id_materia);
+            }
+            //Arreglo final
+            $resp = array( 'programa' => $det_prg , 
+                           'materias' => $materias );                         
+            $arreglo_final[] = $resp;
         }
 
-        if(isset($materias)){
+        if(isset($arreglo_final)){
             $response->setJsonContent(
                 [
-                    'status' => 'OK',
-                    'data'   => $materias,
+                    'status'      => 'OK',
+                    'programas'   => $arreglo_final
                 ]
             );
         }else {

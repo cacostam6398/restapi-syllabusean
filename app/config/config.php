@@ -17,6 +17,7 @@ return new \Phalcon\Config([
                 'username'    => 'root',
                 'password'    => '',
                 'dbname'      => 'syllabus_ean',
+                'charset'     => 'utf8'
 				// 'adapter'     => 'Postgresql',
 		        // 'host'        => 'ec2-54-243-210-70.compute-1.amazonaws.com',
 				// 'username'    => 'pfccnclzowrzyb',
