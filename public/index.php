@@ -42,29 +42,6 @@ try {
     include APP_PATH . '/config/services.php';
 	//*/
 	
-	// Set up the database service
-// $di->set(
-//     'db',
-//     function () {
-//  //       return new PdoMysql(
-// 		  return new PdoMysql(
-//             [ 
-//                'host'     => 'localhost',
-//                'username' => 'root',
-//                'password' => '',
-//                'dbname'   => 'syllabus_ean'
-// 				// 'adapter'     => 'Postgresql',
-// 		        // 'host'        => 'ec2-54-243-210-70.compute-1.amazonaws.com',
-// 				// 'username'    => 'pfccnclzowrzyb',
-// 				// 'password'    => 'f08d84a2e8a83636a9ab9bcfe80ae7447696fe6903e90792231d7112606b7fd9',
-// 				// 'dbname'      => 'd8skbinfa43v3m',
-// 				// 'port'        => '5432',
-// 				// 'schema'      => 'public'
-//             ]
-//         );
-//     }
-// );
-	
     $app = new Micro($di);
     
 // Crear un gestor de eventos
@@ -306,48 +283,48 @@ $app->put(
 );
     
 // Borrando robots basados en la clave primaria
-$app->delete(
-    '/api/robots/{id:[0-9]+}',
-    function ($id) use ($app) {
-        $phql = 'DELETE FROM machine\robot\Robots WHERE id = :id:';
+// $app->delete(
+//     '/api/robots/{id:[0-9]+}',
+//     function ($id) use ($app) {
+//         $phql = 'DELETE FROM machine\robot\Robots WHERE id = :id:';
 
-        $status = $app->modelsManager->executeQuery(
-            $phql,
-            [
-                'id' => $id,
-            ]
-        );
+//         $status = $app->modelsManager->executeQuery(
+//             $phql,
+//             [
+//                 'id' => $id,
+//             ]
+//         );
 
-        // Create a response
-        $response = new Response();
+//         // Create a response
+//         $response = new Response();
 
-        if ($status->success() === true) {
-            $response->setJsonContent(
-                [
-                    'status' => 'OK'
-                ]
-            );
-        } else {
-            // Change the HTTP status
-            $response->setStatusCode(409, 'Conflict');
+//         if ($status->success() === true) {
+//             $response->setJsonContent(
+//                 [
+//                     'status' => 'OK'
+//                 ]
+//             );
+//         } else {
+//             // Change the HTTP status
+//             $response->setStatusCode(409, 'Conflict');
 
-            $errors = [];
+//             $errors = [];
 
-            foreach ($status->getMessages() as $message) {
-                $errors[] = $message->getMessage();
-            }
+//             foreach ($status->getMessages() as $message) {
+//                 $errors[] = $message->getMessage();
+//             }
 
-            $response->setJsonContent(
-                [
-                    'status'   => 'ERROR',
-                    'messages' => $errors,
-                ]
-            );
-        }
+//             $response->setJsonContent(
+//                 [
+//                     'status'   => 'ERROR',
+//                     'messages' => $errors,
+//                 ]
+//             );
+//         }
 
-        return $response;
-    }
-);
+//         return $response;
+//     }
+// );
     
 $app->handle();
 	

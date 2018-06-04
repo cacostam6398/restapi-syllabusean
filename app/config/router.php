@@ -28,11 +28,12 @@ $app->mount($Programas);
 // // $Usuarios->get('/add/{payload}', 'add');
 // $app->mount($Usuarios);
 
-// // Manejador de syllabus - versiones - sesiones
-// $Syllabus = new MicroCollection();
-// $Syllabus->setHandler('SyllabusController', true);
-// $Syllabus->setPrefix('/syllabus');
-// // $products->get('/get/{id}', 'get');
-// // $products->get('/add/{payload}', 'add');
-// $app->mount($Syllabus);
+// Manejador de syllabus - versiones - sesiones
+$Syllabus = new MicroCollection();
+$Syllabus->setHandler('SyllabusController', true);
+$Syllabus->setPrefix('/syllabus');
+$Syllabus->post('/crearsyl', 'crear_syllabus');
+// $products->get('/get/{id}', 'get');
+// $products->get('/add/{payload}', 'add');
+$app->mount($Syllabus);
 

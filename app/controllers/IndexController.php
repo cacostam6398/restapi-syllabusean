@@ -34,7 +34,7 @@ class IndexController extends ControllerBase
                 // Comprobar si la comprobacion del usuario es exitosa
                 if ($usuario != false) {
                     
-                    $response->setStatusCode(201, 'Created');
+                    // $response->setStatusCode(201, 'Created');
         
                     $response->setJsonContent(
                         [

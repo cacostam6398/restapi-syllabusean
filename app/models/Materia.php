@@ -17,6 +17,13 @@ class Materia extends \Phalcon\Mvc\Model
     /**
      *
      * @var string
+     * @Column(column="codigo", type="string", length=15, nullable=true)
+     */
+    protected $codigo;
+
+    /**
+     *
+     * @var string
      * @Column(column="nombre", type="string", length=20, nullable=false)
      */
     protected $nombre;
@@ -51,6 +58,19 @@ class Materia extends \Phalcon\Mvc\Model
     public function setIdMateria($id_materia)
     {
         $this->id_materia = $id_materia;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field codigo
+     *
+     * @param string $codigo
+     * @return $this
+     */
+    public function setCodigo($codigo)
+    {
+        $this->codigo = $codigo;
 
         return $this;
     }
@@ -115,6 +135,16 @@ class Materia extends \Phalcon\Mvc\Model
     public function getIdMateria()
     {
         return $this->id_materia;
+    }
+
+    /**
+     * Returns the value of field codigo
+     *
+     * @return string
+     */
+    public function getCodigo()
+    {
+        return $this->codigo;
     }
 
     /**
@@ -210,6 +240,7 @@ class Materia extends \Phalcon\Mvc\Model
     {
         return [
             'id_materia' => 'id_materia',
+            'codigo' => 'codigo',
             'nombre' => 'nombre',
             'descripcion' => 'descripcion',
             'tipo' => 'tipo',
