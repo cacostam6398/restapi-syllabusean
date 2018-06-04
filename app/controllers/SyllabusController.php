@@ -54,8 +54,7 @@ class SyllabusController extends ControllerBase
             $response->setJsonContent(
                 [
                     'status'   => 'ERROR',
-                    'messages' => 'No se ha podido crear el Syllabus',
-                    'fec'      => $fe,
+                    'messages' => 'No se ha podido crear el Syllabus'
                 ]
             );           
         }else{
@@ -73,7 +72,7 @@ class SyllabusController extends ControllerBase
 
     }
 
-    public function crear_syllabus(){
+    public function crear_competencia(){
 
         // Crear una respuesta
         $response = new Response();
