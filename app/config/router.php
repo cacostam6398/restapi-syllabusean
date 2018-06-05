@@ -35,6 +35,7 @@ $Syllabus->setPrefix('/syllabus');
 $Syllabus->post('/crearsyl', 'crear_syllabus');
 $Syllabus->post('/creardet', 'crear_detalle');
 $Syllabus->post('/obtcompt', 'obtener_competenciast');
+$Syllabus->post('/crearcomp', 'crear_competencia');
 // $products->get('/get/{id}', 'get');
 // $products->get('/add/{payload}', 'add');
 $app->mount($Syllabus);

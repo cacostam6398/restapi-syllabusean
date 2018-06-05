@@ -220,29 +220,68 @@ class SyllabusController extends ControllerBase
     }
 
 
-    // public function crear_competencia(){
-    //     // Crear una respuesta
-    //     $response = new Response();
-    //     if ($this->request->isPost()) {
-    //         $json = $this->request->getJsonRawBody();
-    //         $loger = $this->validar_logueo($json->token);
-    //         if (!$loger){
-    //             // Cambiar el HTTP status
-    //             $response->setStatusCode(409, 'Conflict');
-    //             $response->setJsonContent(
-    //                 [
-    //                     'status'   => 'ERROR',
-    //                     'messages' => 'Usuario no ha sido autenticado',
-    //                 ]
-    //             );
-    //             return $response;
-    //         }
-    //     }else{
-    //         $response->setStatusCode(404, 'Not Found');
-    //         return $response;
-    //     } 
+    public function crear_competencia(){
+        // Crear una respuesta
+        $response = new Response();
+        if ($this->request->isPost()) {
+            $json = $this->request->getJsonRawBody();
+            $loger = $this->validar_logueo($json->token);
+            if (!$loger){
+                // Cambiar el HTTP status
+                $response->setStatusCode(409, 'Conflict');
+                $response->setJsonContent(
+                    [
+                        'status'   => 'ERROR',
+                        'messages' => 'Usuario no ha sido autenticado',
+                    ]
+                );
+                return $response;
+            }
+        }else{
+            $response->setStatusCode(404, 'Not Found');
+            return $response;
+        } 
 
-    // }
+        if(!isset($json->competencias)){
+            // Cambiar el HTTP status
+            $response->setStatusCode(409, 'Conflict');
+            $response->setJsonContent(
+                [
+                    'status'   => 'ERROR',
+                    'messages' => 'No existe arreglo competencias',
+                ]
+            );
+            return $response;           
+        }
+
+        $res_comp_cre = array();$res_comp_err = array();
+
+        foreach($json->competencias as $comp){
+            $competencia            = new syl\ean\Competencia();
+            $competencia->clave     = $comp->clave;
+            $competencia->tipo = 1;
+            //$competencia->descripcion = $json->descripcion;
+            $competencia->contenido = $comp->contenido;
+            if ($competencia->create() === false) {
+                //$response->setStatusCode(409, 'Conflict');
+                $res_comp_err[] = $comp->clave;
+            } else{
+                $res_comp_cre[] = $competencia;
+            }
+        }
+
+        $response->setJsonContent(
+            [
+                'status'   => 'OK',
+                'messages' => 'Se ha ejecutado con exito el servicio ',
+                'competencias' => $res_comp_cre,
+                'comp_error'   => $res_comp_err,
+            ]
+        );  
+
+        return $response;
+
+    }
 
 }
 
