@@ -283,5 +283,142 @@ class SyllabusController extends ControllerBase
 
     }
 
+    public function crear_sesion(){
+        // Crear una respuesta
+        $response = new Response();
+        if ($this->request->isPost()) {
+            $json = $this->request->getJsonRawBody();
+            $loger = $this->validar_logueo($json->token);
+            if (!$loger){
+                // Cambiar el HTTP status
+                $response->setStatusCode(409, 'Conflict');
+                $response->setJsonContent(
+                    [
+                        'status'   => 'ERROR',
+                        'messages' => 'Usuario no ha sido autenticado',
+                    ]
+                );
+                return $response;
+            }
+        }else{
+            $response->setStatusCode(404, 'Not Found');
+            return $response;
+        }
+        
+        $sesion                  = new syl\ean\Sesion();
+        $sesion->contenidos      = $json->contenidos;
+        $sesion->act_aprendizaje = $json->act_aprendizaje;
+        $sesion->numero          = $json->numero;
+
+        if ($sesion->create() === false) {
+            $response->setStatusCode(409, 'Conflict');
+            $response->setJsonContent(
+                [
+                    'status'   => 'ERROR',
+                    'messages' => 'Sesion no creada',
+                ]
+            );
+            return $response;
+        }
+        //Crear la conexión entre Sesion y Detalle-version
+        $det_ses =  new syl\ean\DetalleSesion();
+        $det_ses->id_sesion  = $sesion->id_sesion;
+        $det_ses->id_detalle = $json->id_detalle;
+
+        if($det_ses->create() === false){
+            $response->setStatusCode(409, 'Conflict');
+            $response->setJsonContent(
+                [
+                    'status'   => 'ERROR',
+                    'messages' => 'Conexión detalle y sesion no creada',
+                ]
+            );
+            return $response;
+        }
+        //Crear la conexion entre la sesion y las competencias
+        foreach($json->competencias as $competencia){
+            $con_ses_com = new syl\ean\SesionComp();
+            $con_ses_com->id_sesion      = $sesion->id_sesion;
+            $con_ses_com->id_competencia = $competencia->id_competencia;
+            if ($con_ses_com->create() === false){
+                $comp_error[] = $competencia->id_competencia;
+            }
+        }
+
+        $response->setJsonContent(
+            [
+                'status'   => 'OK',
+                'messages' => 'Sesion creada y enlazada',
+                'error_comp' => $comp_error ,
+            ]
+        );
+
+        return $response;
+    }
+
+    public function consultar_syllabus(){
+        // Crear una respuesta
+        $response = new Response();
+        if ($this->request->isPost()) {
+            $json = $this->request->getJsonRawBody();
+            $loger = $this->validar_logueo($json->token);
+            if (!$loger){
+                // Cambiar el HTTP status
+                $response->setStatusCode(409, 'Conflict');
+                $response->setJsonContent(
+                    [
+                        'status'   => 'ERROR',
+                        'messages' => 'Usuario no ha sido autenticado',
+                    ]
+                );
+                return $response;
+            }
+        }else{
+            $response->setStatusCode(404, 'Not Found');
+            return $response;
+        }
+
+        $Syllabus = syl\ean\Syllabus::findFirst(['id_syllabus = ?0',
+                                                 'bind' => [ $json->id_syllabus ],]);
+
+        if($Syllabus === false){
+            $response->setStatusCode(409, 'Conflict');
+            $response->setJsonContent(
+                [
+                    'status'   => 'ERROR',
+                    'messages' => 'No existe el syllabus con id'.$json->id_syllabus ,
+                ]
+                ); 
+            return $response;
+        }
+        if($Syllabus->version_actual != null){
+            $Detalle = syl\ean\DetalleVersion::findFirst($Syllabus->version_actual);
+            $det_ses = syl\ean\DetalleVersion::find(['id_detalle = ?0',
+                                                    'bind' => [ $Detalle->id_detalle ],]);
+            $sesiones = syl\ean\Sesion::find($det_ses->id_sesion);
+            $det_comps = syl\ean\SesionComp::find($sesiones->id_sesion);
+            foreach($det_comps as $det_comp){         
+                $competencias = syl\ean\Competencia::find($det_comp->id_competencia);
+                $comp = array($sesion,$competencias);
+                $ses_comp[] = $comp;
+            }
+
+            
+        }
+        $response->setJsonContent(
+            [
+                'status'   => 'OK',
+                'messages' => 'Información Syllabus',
+                'Syllabus' => $Syllabus ,
+                'Detalle'  => $Detalle ,
+                'Sesiones' => $sesiones,
+                'Sesion_comp'  => $ses_comp,
+            ]
+            );         
+                                              
+        return $response;
+
+    }
+
 }
 
