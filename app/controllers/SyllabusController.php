@@ -399,7 +399,8 @@ class SyllabusController extends ControllerBase
             $det_comps = syl\ean\SesionComp::find($sesiones->id_sesion);
             foreach($det_comps as $det_comp){         
                 $competencias = syl\ean\Competencia::find($det_comp->id_competencia);
-                $comp = array($sesion,$competencias);
+                $comp = array('sesion'       => $det_comp->id_sesion,
+                              'competencias' => $competencias);
                 $ses_comp[] = $comp;
             }
 
@@ -412,7 +413,7 @@ class SyllabusController extends ControllerBase
                 'Syllabus' => $Syllabus ,
                 'Detalle'  => $Detalle ,
                 'Sesiones' => $sesiones,
-                'Sesion_comp'  => $ses_comp,
+                'Competencias'  => $ses_comp,
             ]
             );         
                                               
