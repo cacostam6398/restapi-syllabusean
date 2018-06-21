@@ -335,6 +335,7 @@ class SyllabusController extends ControllerBase
             );
             return $response;
         }
+        $comp_error = array();
         //Crear la conexion entre la sesion y las competencias
         foreach($json->competencias as $competencia){
             $con_ses_com = new syl\ean\SesionComp();
@@ -395,7 +396,7 @@ class SyllabusController extends ControllerBase
             $Detalle = syl\ean\DetalleVersion::findFirst($Syllabus->version_actual);
             $det_ses = syl\ean\DetalleVersion::find(['id_detalle = ?0',
                                                     'bind' => [ $Detalle->id_detalle ],]);
-            $sesiones = syl\ean\Sesion::find($det_ses->id_sesion);
+            $sesiones = syl\ean\Sesion::find($det_ses->id_detalle);
             $det_comps = syl\ean\SesionComp::find($sesiones->id_sesion);
             foreach($det_comps as $det_comp){         
                 $competencias = syl\ean\Competencia::find($det_comp->id_competencia);

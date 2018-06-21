@@ -20,13 +20,14 @@ $Programas->post('/obtmat', 'obt_materias');
 // $inicio->get('/add/{payload}', 'add');
 $app->mount($Programas);
 
-// // Manejador Usuarios
-// $Usuarios = new MicroCollection();
-// $Usuarios->setHandler('UsuariosController', true);
-// $Usuarios->setPrefix('/Usuarios');
-// // $Usuarios->get('/get/{id}', 'get');
-// // $Usuarios->get('/add/{payload}', 'add');
-// $app->mount($Usuarios);
+// Manejador Usuarios
+$Usuarios = new MicroCollection();
+$Usuarios->setHandler('UsuariosController', true);
+$Usuarios->setPrefix('/usuarios');
+$Usuarios->post('/listarsyl', 'listar_syllabus');
+// $Usuarios->get('/get/{id}', 'get');
+// $Usuarios->get('/add/{payload}', 'add');
+$app->mount($Usuarios);
 
 // Manejador de syllabus - versiones - sesiones
 $Syllabus = new MicroCollection();
